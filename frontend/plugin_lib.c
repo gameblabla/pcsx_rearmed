@@ -108,15 +108,12 @@ static void print_msg(int h, int border)
 
 static void print_fps(int h, int border)
 {
-	hud_printf(pl_vout_buf, pl_vout_w, border + 2, h - HUD_HEIGHT,
-		"%2d %4.1f", pl_rearmed_cbs.flips_per_sec,
-		pl_rearmed_cbs.vsps_cur);
+	hud_printf(pl_vout_buf, pl_vout_w, border + 2, h - HUD_HEIGHT, "%2d %4.1f", pl_rearmed_cbs.flips_per_sec, pl_rearmed_cbs.vsps_cur);
 }
 
 static void print_cpu_usage(int w, int h, int border)
 {
-	hud_printf(pl_vout_buf, pl_vout_w, pl_vout_w - border - 28,
-		h - HUD_HEIGHT, "%3d", pl_rearmed_cbs.cpu_usage);
+	hud_printf(pl_vout_buf, pl_vout_w, pl_vout_w - border - 28, h - HUD_HEIGHT, "%3d", pl_rearmed_cbs.cpu_usage);
 }
 
 // draw 192x8 status of 24 sound channels
@@ -314,38 +311,41 @@ static void pl_vout_flip(const void *vram, int stride, int bgr24, int w, int h)
 
 	if (vram == NULL) {
 		// blanking
-		if (pl_plat_clear)
+		if (pl_plat_clear) {
 			pl_plat_clear();
-		else
-			memset(pl_vout_buf, 0,
-				dstride * pl_vout_h * pl_vout_bpp / 8);
+    }
+		else {
+			memset(pl_vout_buf, 0, dstride * pl_vout_h * pl_vout_bpp / 8);
+    }
 		goto out_hud;
 	}
 
 	// borders
 	doffs = (dstride - w * pl_vout_scale_w) / 2 & ~1;
 
-	if (doffs > doffs_old)
+	if (doffs > doffs_old) {
 		clear_counter = 2;
+  }
 	doffs_old = doffs;
 
 	if (clear_counter > 0) {
-		if (pl_plat_clear)
+		if (pl_plat_clear) {
 			pl_plat_clear();
-		else
-			memset(pl_vout_buf, 0,
-				dstride * pl_vout_h * pl_vout_bpp / 8);
+    }
+		else {
+			memset(pl_vout_buf, 0, dstride * pl_vout_h * pl_vout_bpp / 8);
+    }
 		clear_counter--;
 	}
 
-	if (pl_plat_blit)
-	{
+	if (pl_plat_blit) {
 		pl_plat_blit(doffs, src, w, h, stride, bgr24);
 		goto out_hud;
 	}
 
-	if (dest == NULL)
+	if (dest == NULL) {
 		goto out;
+  }
 
 	dest += doffs * 2;
 

@@ -272,7 +272,7 @@ unsigned char PADpoll_pad(unsigned char value) {
 	if (CurByte == 2)
 		do_cmd2(value);
 
-	if (padstate[CurPad].pad.controllerType == PSE_PAD_TYPE_ANALOGPAD)
+  if (padstate[CurPad].pad.controllerType == PSE_PAD_TYPE_ANALOGPAD)
 		do_vibration(value);
 
 	return buf[CurByte++];

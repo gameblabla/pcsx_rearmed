@@ -1,4 +1,7 @@
 void plat_init(void);
+#if defined(MIYOO)
+void plat_pre_finish(void);
+#endif
 void plat_finish(void);
 void plat_minimize(void);
 void *plat_prepare_screenshot(int *w, int *h, int *bpp);

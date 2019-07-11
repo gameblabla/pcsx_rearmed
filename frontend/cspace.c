@@ -26,7 +26,8 @@ void bgr555_to_rgb565(void *dst_, const void *src_, int bytes)
 
 	for (x = 0; x < bytes / 4; x++) {
 		p = src[x];
-		p = ((p & 0x7c007c00) >> 10) | ((p & 0x03e003e0) << 1)
+		p = ((p & 0x7c007c00) >> 10) 
+      | ((p & 0x03e003e0) << 1)
 			| ((p & 0x001f001f) << 11);
 		dst[x] = p;
 	}

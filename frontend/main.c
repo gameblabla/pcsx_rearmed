@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <fcntl.h>  
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
@@ -653,11 +654,13 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Exit..\n");
+#if defined(MIYOO)
+  plat_pre_finish();
+#endif
 	ClosePlugins();
 	SysClose();
 	menu_finish();
 	plat_finish();
-
 	return 0;
 }
 

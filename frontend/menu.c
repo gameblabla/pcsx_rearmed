@@ -118,10 +118,10 @@ static int bios_sel, gpu_plugsel, spu_plugsel;
 #ifndef UI_FEATURES_H
 #define MENU_BIOS_PATH "bios/"
 #define MENU_SHOW_VARSCALER 0
-#define MENU_SHOW_VOUTMODE 1
+#define MENU_SHOW_VOUTMODE 0
 #define MENU_SHOW_SCALER2 0
 #define MENU_SHOW_NUBS_BTNS 0
-#define MENU_SHOW_VIBRATION 0
+#define MENU_SHOW_VIBRATION 1
 #define MENU_SHOW_DEADZONE 0
 #define MENU_SHOW_MINIMIZE 0
 #define MENU_SHOW_FULLSCREEN 1
@@ -2502,7 +2502,8 @@ void menu_init(void)
 		exit(1);
 	}
 
-	emu_make_path(buff, "skin/background.png", sizeof(buff));
+	//emu_make_path(buff, "skin/background.png", sizeof(buff));
+	sprintf(buff, "skin/background.png", sizeof(buff));
 	readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h);
 
 	i = plat_target.cpu_clock_set != NULL

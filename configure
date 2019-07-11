@@ -37,7 +37,7 @@ check_define_val()
 # setting options to "yes" or "no" will make that choice default,
 # "" means "autodetect".
 
-platform_list="generic pandora maemo caanoo libretro"
+platform_list="generic pandora maemo caanoo libretro miyoo"
 platform="generic"
 builtin_gpu_list="peops unai neon"
 builtin_gpu=""
@@ -51,7 +51,7 @@ have_armv5=""
 have_armv6=""
 have_armv7=""
 have_arm_neon=""
-have_tslib=""
+have_tslib="no"
 have_gles=""
 have_c64x_dsp=""
 enable_dynarec="yes"
@@ -106,6 +106,14 @@ set_platform()
     drc_cache_base="yes"
     optimize_arm926ej="yes"
     need_warm="yes"
+    ;;
+  miyoo)
+    ARCH="arm"
+    sound_drivers="sdl"
+    ram_fixed="yes"
+    drc_cache_base="yes"
+    optimize_arm926ej="yes"
+    need_warm="no"
     ;;
   libretro)
     sound_drivers="libretro"
