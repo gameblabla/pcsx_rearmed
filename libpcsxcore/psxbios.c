@@ -1729,7 +1729,7 @@ void psxBios_OpenEvent() { // 08
 
 	Event[ev][spec].status = EvStWAIT;
 	Event[ev][spec].mode = a2;
-	Event[ev][spec].fhandler = a3;
+	if (a2 == EvMdINTR) Event[ev][spec].fhandler = a3;
 
 	v0 = ev | (spec << 8);
 	pc0 = ra;
