@@ -3100,6 +3100,9 @@ void psxBiosInit() {
 	psxMu32ref(0x0004) = SWAPu32(0x800C5A27);
 	psxMu32ref(0x0008) = SWAPu32(0x08000403);
 	psxMu32ref(0x000C) = SWAPu32(0x00000000);
+	
+	psxMu32ref(0x0064) = SWAPu32(0x00000000);
+	psxMu32ref(0x0068) = SWAPu32(0xFF000000);
 }
 
 void psxBiosShutdown() {
