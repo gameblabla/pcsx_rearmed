@@ -70,7 +70,7 @@ static long PADreadPort2(PadDataS *pad)
 }
 
 /* GPU */
-extern long GPUopen(unsigned long *, char *, char *);
+extern long GPUopen(void *);
 extern long GPUinit(void);
 extern long GPUshutdown(void);
 extern long GPUclose(void);

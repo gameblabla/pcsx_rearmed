@@ -21,16 +21,32 @@
 
 #include "config.h"
 
-#define DEFAULT_MEM_CARD_1 "/.pcsx/memcards/card1.mcd"
-#define DEFAULT_MEM_CARD_2 "/.pcsx/memcards/card2.mcd"
-#define MEMCARD_DIR "/.pcsx/memcards/"
-#define PLUGINS_DIR "/.pcsx/plugins/"
-#define PLUGINS_CFG_DIR "/.pcsx/plugins/cfg/"
-#define PCSX_DOT_DIR "/.pcsx/"
-#define STATES_DIR "/.pcsx/sstates/"
-#define CHEATS_DIR "/.pcsx/cheats/"
-#define PATCHES_DIR "/.pcsx/patches/"
-#define BIOS_DIR "/bios/"
+
+extern char PCSX_DOT_DIR[512];
+extern char BIOS_DIR[512];
+extern char MEMCARD_DIR[512];
+extern char STATES_DIR[512];
+extern char PLUGINS_DIR[512];
+extern char PCSX_CFG_DIR[512];
+extern char PLUGINS_CFG_DIR[512];
+extern char CHEATS_DIR[512];
+extern char PATCHES_DIR[512];
+extern char PCSX_DOT_DIR_CFG[512];
+extern char SCREENSHOT_DIR[512];
+extern char DEFAULT_MEM_CARD_1[512];
+extern char DEFAULT_MEM_CARD_2[512];
+/*
+#define DEFAULT_MEM_CARD_1 "~/.pcsx/memcards/card1.mcd"
+#define DEFAULT_MEM_CARD_2 "~/.pcsx/memcards/card2.mcd"
+#define MEMCARD_DIR "~/.pcsx/memcards/"
+#define PLUGINS_DIR "~/.pcsx/plugins/"
+#define PLUGINS_CFG_DIR "~/.pcsx/plugins/cfg/"
+#define PCSX_DOT_DIR "~/.pcsx/"
+#define STATES_DIR "~/.pcsx/sstates/"
+#define CHEATS_DIR "~/.pcsx/cheats/"
+#define PATCHES_DIR "~/.pcsx/patches/"
+#define BIOS_DIR "~/.pcsx/bios/"
+*/
 
 extern char cfgfile_basename[MAXPATHLEN];
 

@@ -473,9 +473,9 @@ static char *get_cd_label(void)
 static void make_cfg_fname(char *buf, size_t size, int is_game)
 {
 	if (is_game)
-		snprintf(buf, size, "." PCSX_DOT_DIR "cfg/%.32s-%.9s.cfg", get_cd_label(), CdromId);
+		snprintf(buf, size, "%scfg/%.32s-%.9s.cfg", PCSX_DOT_DIR, get_cd_label(), CdromId);
 	else
-		snprintf(buf, size, "." PCSX_DOT_DIR "%s", cfgfile_basename);
+		snprintf(buf, size, "%s%s", PCSX_DOT_DIR, cfgfile_basename);
 }
 
 static void keys_write_all(FILE *f);
@@ -526,13 +526,13 @@ static int menu_write_config(int is_game)
 
 static int menu_do_last_cd_img(int is_get)
 {
-	static const char *defaults[] = { "/media", "/mnt/sd", "/mnt" };
+	static const char *defaults[] = { "/home", "/media", "/mnt/sd", "/mnt" };
 	char path[256];
 	struct stat64 st;
 	FILE *f;
 	int i, ret = -1;
 
-	snprintf(path, sizeof(path), "." PCSX_DOT_DIR "lastcdimg.txt");
+	snprintf(path, sizeof(path), "%slastcdimg.txt", PCSX_DOT_DIR);
 	f = fopen(path, is_get ? "r" : "w");
 	if (f == NULL) {
 		ret = -1;
@@ -2440,7 +2440,7 @@ do_plugins:
 	closedir(dir);
 
 do_memcards:
-	dir = opendir("." MEMCARD_DIR);
+	dir = opendir(MEMCARD_DIR);
 	if (dir == NULL) {
 		perror("scan_bios_plugins memcards opendir");
 		return;
@@ -2460,7 +2460,7 @@ do_memcards:
 		if (ent->d_type != DT_REG && ent->d_type != DT_LNK)
 			continue;
 
-		snprintf(fname, sizeof(fname), "." MEMCARD_DIR "%s", ent->d_name);
+		snprintf(fname, sizeof(fname), "%s%s", MEMCARD_DIR, ent->d_name);
 		if (stat(fname, &st) != 0) {
 			printf("bad memcard file: %s\n", ent->d_name);
 			continue;

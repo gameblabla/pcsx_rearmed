@@ -54,12 +54,56 @@ enum sched_action emu_action, emu_action_old;
 char hud_msg[64];
 int hud_new_msg;
 
+char PCSX_DOT_DIR[512];
+char BIOS_DIR[512];
+char MEMCARD_DIR[512];
+char STATES_DIR[512];
+char PLUGINS_DIR[512];
+char PCSX_CFG_DIR[512];
+char PLUGINS_CFG_DIR[512];
+char CHEATS_DIR[512];
+char PATCHES_DIR[512];
+char PCSX_DOT_DIR_CFG[512];
+char SCREENSHOT_DIR[512];
+char DEFAULT_MEM_CARD_1[512];
+char DEFAULT_MEM_CARD_2[512];
+
+static void Init_paths()
+{
+	snprintf(PCSX_DOT_DIR, sizeof(PCSX_DOT_DIR), "%s/%s/", getenv("HOME"), ".pcsx");
+	
+	snprintf(PCSX_CFG_DIR, sizeof(PCSX_CFG_DIR), "%scfg", PCSX_DOT_DIR);
+	snprintf(MEMCARD_DIR, sizeof(MEMCARD_DIR), "%smemcards/", PCSX_DOT_DIR);
+	
+	snprintf(DEFAULT_MEM_CARD_1, sizeof(DEFAULT_MEM_CARD_1), "%s/memcards/card1.mcd", PCSX_DOT_DIR);
+	snprintf(DEFAULT_MEM_CARD_2, sizeof(DEFAULT_MEM_CARD_2), "%s/memcards/card2.mcd", PCSX_DOT_DIR);
+	
+	snprintf(PLUGINS_DIR, sizeof(PLUGINS_DIR), "%splugins/", PCSX_DOT_DIR);
+	snprintf(PLUGINS_CFG_DIR, sizeof(PLUGINS_CFG_DIR), "%splugins/cfg/", PCSX_DOT_DIR);
+	snprintf(STATES_DIR, sizeof(STATES_DIR), "%ssstates/", PCSX_DOT_DIR);
+	snprintf(CHEATS_DIR, sizeof(CHEATS_DIR), "%scheats/", PCSX_DOT_DIR);
+	snprintf(PATCHES_DIR, sizeof(PATCHES_DIR), "%spatches/", PCSX_DOT_DIR);
+	snprintf(BIOS_DIR, sizeof(BIOS_DIR), "%sbios/", PCSX_DOT_DIR);
+	snprintf(SCREENSHOT_DIR, sizeof(BIOS_DIR), "%sscreenshots/", PCSX_DOT_DIR);
+	
+	mkdir(PCSX_DOT_DIR, 0755);
+	mkdir(PCSX_CFG_DIR, 0755);
+	mkdir(MEMCARD_DIR, 0755);
+	mkdir(PLUGINS_DIR, 0755);
+	mkdir(PLUGINS_CFG_DIR, 0755);
+	mkdir(STATES_DIR, 0755);
+	mkdir(CHEATS_DIR, 0755);
+	mkdir(PATCHES_DIR, 0755);
+	mkdir(BIOS_DIR, 0755);
+	mkdir(SCREENSHOT_DIR, 0755);
+}
+
 static void make_path(char *buf, size_t size, const char *dir, const char *fname)
 {
 	if (fname)
-		snprintf(buf, size, ".%s%s", dir, fname);
+		snprintf(buf, size, "%s%s", dir, fname);
 	else
-		snprintf(buf, size, ".%s", dir);
+		snprintf(buf, size, "%s", dir);
 }
 #define MAKE_PATH(buf, dir, fname) \
 	make_path(buf, sizeof(buf), dir, fname)
@@ -103,10 +147,10 @@ void set_cd_image(const char *fname)
 static void set_default_paths(void)
 {
 #ifndef NO_FRONTEND
-	snprintf(Config.PatchesDir, sizeof(Config.PatchesDir), "." PATCHES_DIR);
+	snprintf(Config.PatchesDir, sizeof(Config.PatchesDir), PATCHES_DIR);
 	MAKE_PATH(Config.Mcd1, MEMCARD_DIR, "card1.mcd");
 	MAKE_PATH(Config.Mcd2, MEMCARD_DIR, "card2.mcd");
-	strcpy(Config.BiosDir, "bios");
+	strcpy(Config.BiosDir, BIOS_DIR);
 #endif
 
 	strcpy(Config.PluginsDir, "plugins");
@@ -459,6 +503,19 @@ void emu_core_ask_exit(void)
 #include <sys/stat.h>
 #include <sys/types.h>
 
+
+/*
+#define DEFAULT_MEM_CARD_1 "~/.pcsx/memcards/card1.mcd"
+#define DEFAULT_MEM_CARD_2 "~/.pcsx/memcards/card2.mcd"
+#define MEMCARD_DIR "~/.pcsx/memcards/"
+#define PLUGINS_DIR "~/.pcsx/plugins/"
+#define PLUGINS_CFG_DIR "~/.pcsx/plugins/cfg/"
+#define PCSX_DOT_DIR "~/.pcsx/"
+#define STATES_DIR "~/.pcsx/sstates/"
+#define CHEATS_DIR "~/.pcsx/cheats/"
+#define PATCHES_DIR "~/.pcsx/patches/"
+#define BIOS_DIR "~/.pcsx/bios/"*/
+
 static void create_profile_dir(const char *directory) {
 	char path[MAXPATHLEN];
 
@@ -466,7 +523,9 @@ static void create_profile_dir(const char *directory) {
 	mkdir(path, S_IRWXU | S_IRWXG);
 }
 
-static void check_profile(void) {
+static void check_profile(void) 
+{
+	
 	// make sure that ~/.pcsx exists
 	create_profile_dir(PCSX_DOT_DIR);
 
@@ -477,8 +536,8 @@ static void check_profile(void) {
 	create_profile_dir(PLUGINS_CFG_DIR);
 	create_profile_dir(CHEATS_DIR);
 	create_profile_dir(PATCHES_DIR);
-	create_profile_dir(PCSX_DOT_DIR "cfg");
-	create_profile_dir("/screenshots/");
+	create_profile_dir(PCSX_CFG_DIR);
+	create_profile_dir(SCREENSHOT_DIR);
 }
 
 static void check_memcards(void)
@@ -488,7 +547,7 @@ static void check_memcards(void)
 	int i;
 
 	for (i = 1; i <= 9; i++) {
-		snprintf(buf, sizeof(buf), ".%scard%d.mcd", MEMCARD_DIR, i);
+		snprintf(buf, sizeof(buf), "%scard%d.mcd", MEMCARD_DIR, i);
 
 		f = fopen(buf, "rb");
 		if (f == NULL) {
@@ -509,6 +568,8 @@ int main(int argc, char *argv[])
 	int psxout = 0;
 	int loadst = 0;
 	int i;
+	
+	Init_paths();
 
 	emu_core_preinit();
 
@@ -591,7 +652,7 @@ int main(int argc, char *argv[])
 		// FIXME: this recovery doesn't work, just delete bad config and bail out
 		// SysMessage("could not load plugins, retrying with defaults\n");
 		set_default_paths();
-		snprintf(path, sizeof(path), "." PCSX_DOT_DIR "%s", cfgfile_basename);
+		snprintf(path, sizeof(path), "%s%s", PCSX_DOT_DIR, cfgfile_basename);
 		remove(path);
 		SysMessage("Failed loading plugins!");
 		return 1;
@@ -747,8 +808,9 @@ void SysUpdate() {
 }
 
 int get_state_filename(char *buf, int size, int i) {
-	return get_gameid_filename(buf, size,
-		"." STATES_DIR "%.32s-%.9s.%3.3d", i);
+	char states_tmp[512];
+	snprintf(states_tmp, sizeof(states_tmp), "%s%.32s-%.9s.%3.3d", STATES_DIR);
+	return get_gameid_filename(buf, size, states_tmp, i);
 }
 
 int emu_check_state(int slot)
