@@ -808,9 +808,12 @@ void SysUpdate() {
 }
 
 int get_state_filename(char *buf, int size, int i) {
-	char states_tmp[512];
-	snprintf(states_tmp, sizeof(states_tmp), "%s%.32s-%.9s.%3.3d", STATES_DIR);
-	return get_gameid_filename(buf, size, states_tmp, i);
+	int result;
+	char save_tmp[512];
+	result = get_gameid_filename(buf, size, "%.32s-%.9s.%3.3d", i);
+	snprintf(save_tmp, sizeof(save_tmp), "%s%s", STATES_DIR, buf);
+	snprintf(buf, size, "%s", save_tmp);
+	return result;
 }
 
 int emu_check_state(int slot)
