@@ -3,9 +3,11 @@
 # default stuff goes here, so that config can override
 TARGET ?= pcsx
 CFLAGS += -Wall -ggdb -Iinclude -ffast-math
+
 ifndef DEBUG
 CFLAGS += -O2 -DNDEBUG
 endif
+
 CXXFLAGS += $(CFLAGS)
 #DRC_DBG = 1
 #PCNT = 1
@@ -182,6 +184,16 @@ frontend/main.o frontend/menu.o: CFLAGS += -include frontend/320240/ui_gp2x.h
 USE_PLUGIN_LIB = 1
 USE_FRONTEND = 1
 endif
+ifeq "$(PLATFORM)" "miyoo"
+OBJS += frontend/libpicofe/in_sdl.o
+OBJS += frontend/libpicofe/linux/in_evdev.o
+OBJS += frontend/plat_suniv.o
+frontend/main.o frontend/menu.o: CFLAGS += -include frontend/320240/ui_miyoo.h
+USE_PLUGIN_LIB = 1
+USE_FRONTEND = 1
+CFLAGS += $(shell /opt/bittboy-toolchain/arm-buildroot-linux-musleabi/sysroot/usr/bin/sdl-config --cflags) -DMIYOO
+LDFLAGS += $(shell /opt/bittboy-toolchain/arm-buildroot-linux-musleabi/sysroot/usr/bin/sdl-config --libs)
+endif
 ifeq "$(PLATFORM)" "maemo"
 OBJS += maemo/hildon.o maemo/main.o maemo/maemo_xkb.o frontend/pl_gun_ts.o
 maemo/%.o: maemo/%.c
@@ -327,4 +339,19 @@ rel: pcsx $(PLUGINS) \
 	cp ./lib/libbz2.so.1 out/pcsx_rearmed/lib/
 	mkdir out/pcsx_rearmed/bios/
 	cd out && zip -9 -r ../pcsx_rearmed_$(VER)_caanoo.zip *
+endif
+
+ifeq "$(PLATFORM)" "miyoo"
+VER = v1.9
+rel: pcsx $(PLUGINS) \
+		frontend/320240/pcsx26.png \
+		frontend/320240/skin \
+		readme.txt COPYING
+	rm -rf out
+	mkdir -p out/pcsx_rearmed/plugins
+	cp -r $^ out/pcsx_rearmed/
+	mv out/pcsx_rearmed/*.so out/pcsx_rearmed/plugins/
+	mkdir out/pcsx_rearmed/lib/
+	mkdir out/pcsx_rearmed/bios/
+	cd out && zip -9 -r ../pcsx_rearmed_$(VER)_miyoo.zip *
 endif
