@@ -68,7 +68,7 @@ static const s32 VerboseLevel     = VERBOSE_LEVEL;
 
 /******************************************************************************/
 
-Rcnt rcnts[ CounterQuantity ];
+extern Rcnt rcnts[ CounterQuantity ];
 
 u32 hSyncCount = 0;
 u32 frame_counter = 0;
