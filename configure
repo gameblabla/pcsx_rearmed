@@ -72,6 +72,9 @@ AS="${AS-${CROSS_COMPILE}as}"
 AR="${AS-${CROSS_COMPILE}ar}"
 MAIN_LDLIBS="$LDLIBS -ldl -lm -lpthread"
 config_mak="config.mak"
+SYSROOT=`$CC $CFLAGS $MAIN_LDLIBS --print-sysroot 2> /dev/null || true`
+test -n "$SDL_CONFIG" || SDL_CONFIG="$(ls $SYSROOT/usr/bin/sdl-config 2>/dev/null | grep /bin/sdl-config | head -n 1)"
+echo $SYSROOT
 
 fail()
 {
@@ -421,11 +424,11 @@ else
 fi
 
 if [ "$need_sdl" = "yes" ]; then
-  which sdl-config > /dev/null || \
+  [ -x "$SDL_CONFIG" ] || \
     fail "sdl-config is missing; please install libsdl (libsdl1.2-dev)"
-  CFLAGS="$CFLAGS `sdl-config --cflags`"
-  MAIN_LDLIBS="`sdl-config --libs` $MAIN_LDLIBS"
-  check_sdl || fail "please install libsdl (libsdl1.2-dev)"
+  CFLAGS="$CFLAGS `$SDL_CONFIG --cflags`"
+  MAIN_LDLIBS="`$SDL_CONFIG --libs` $MAIN_LDLIBS"
+  check_sdl `$SDL_CONFIG --libs` || fail "please install libsdl (libsdl1.2-dev)"
 fi
 
 # check for tslib (only headers needed)
